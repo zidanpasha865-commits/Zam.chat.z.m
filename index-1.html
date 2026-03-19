@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ZAM CHAT v2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ==================== SCREEN 1: SECURITY ==================== -->
+<div id="s-security" class="screen active">
+  <div class="logo">ZAM CHAT</div>
+  <div class="logo-sub">Private · Secure · Yours</div>
+  <div class="card" style="animation-delay:0.15s">
+    <div class="card-title">Security Lock 🔒</div>
+    <div class="card-sub">Enter all 3 passwords</div>
+    <div class="step-dots">
+      <div class="step-dot active" id="sd1"></div>
+      <div class="step-dot" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Password 1</label>
+      <div class="pw-wrap"><input type="password" id="sec-p1" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('sec-p1',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Password 2</label>
+      <div class="pw-wrap"><input type="password" id="sec-p2" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('sec-p2',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Password 3</label>
+      <div class="pw-wrap"><input type="password" id="sec-p3" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('sec-p3',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="err-msg" id="sec-err"></div>
+    <button class="btn btn-accent" onclick="checkSecurity()" style="margin-top:8px">ENTER →</button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 2: CHOOSE ==================== -->
+<div id="s-choose" class="screen">
+  <div class="logo">ZAM CHAT</div>
+  <div class="logo-sub">Welcome back</div>
+  <div class="choose-card">
+    <button class="btn btn-accent" onclick="showScreen('s-login')">Account</button>
+    <button class="btn btn-outline" onclick="showScreen('s-signup')">New Account</button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 3: SIGNUP ==================== -->
+<div id="s-signup" class="screen">
+  <div class="logo" style="font-size:28px;margin-bottom:4px">Create Account</div>
+  <div class="logo-sub" style="margin-bottom:24px">Join ZAM CHAT</div>
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Username *</label>
+      <input type="text" id="su-username" placeholder="your_username" />
+    </div>
+    <div class="input-group">
+      <label class="input-label">Password *</label>
+      <div class="pw-wrap"><input type="password" id="su-password" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('su-password',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Email (optional)</label>
+      <input type="email" id="su-email" placeholder="you@email.com" />
+    </div>
+    <div class="err-msg" id="su-err"></div>
+    <button class="btn btn-accent" onclick="doSignup()">ENTER →</button>
+    <div style="margin-top:12px;text-align:center">
+      <span style="font-size:13px;color:var(--text2)">Already have account? </span>
+      <span style="font-size:13px;color:var(--accent);cursor:pointer" onclick="showScreen('s-login')">Login</span>
+    </div>
+  </div>
+  <div style="margin-top:16px"><span class="back-btn" onclick="showScreen('s-choose')">←</span></div>
+</div>
+
+<!-- ==================== SCREEN 4: LOGIN ==================== -->
+<div id="s-login" class="screen">
+  <div class="logo" style="font-size:28px;margin-bottom:4px">Account</div>
+  <div class="logo-sub" style="margin-bottom:24px">Login to ZAM CHAT</div>
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Username *</label>
+      <input type="text" id="li-username" placeholder="your_username" />
+    </div>
+    <div class="input-group">
+      <label class="input-label">Password *</label>
+      <div class="pw-wrap"><input type="password" id="li-password" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('li-password',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="err-msg" id="li-err"></div>
+    <button class="btn btn-accent" onclick="doLogin()">ENTER →</button>
+    <div style="margin-top:12px;text-align:center">
+      <span style="font-size:13px;color:var(--text2)">New here? </span>
+      <span style="font-size:13px;color:var(--accent);cursor:pointer" onclick="showScreen('s-signup')">Create Account</span>
+    </div>
+  </div>
+  <div style="margin-top:16px"><span class="back-btn" onclick="showScreen('s-choose')">←</span></div>
+</div>
+
+<!-- ==================== SCREEN 5: HOME ==================== -->
+<div id="s-home" class="screen">
+  <div class="app-layout">
+    <div class="top-bar">
+      <div class="top-bar-logo">ZAM CHAT</div>
+      <div class="top-bar-icons">
+        <div class="icon-btn" onclick="goSearch()" title="Search">🔍</div>
+        <div class="icon-btn" onclick="goProfile()" title="Profile">👤</div>
+      </div>
+    </div>
+
+    <div class="home-feed" id="home-feed">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="bottom-nav" style="position:relative;">
+      <div style="position:absolute;left:50%;transform:translateX(-50%);">
+        <span class="zam-pill active-nav">ZAM CHAT</span>
+      </div>
+      <div style="margin-left:auto;">
+        <div class="nav-item" id="nav-admin" onclick="goAdminLock()">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-label">Admin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 6: SEARCH ==================== -->
+<div id="s-search" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="page-title">Search Users</div>
+  </div>
+  <div class="search-page-bar">
+    <input class="search-page-input" id="search-input" placeholder="Search by username..." onkeydown="if(event.key==='Enter')doSearch()" />
+    <button class="search-go-btn" onclick="doSearch()">🔍</button>
+  </div>
+  <div class="search-results" id="search-results">
+    <div style="padding:40px;text-align:center;color:var(--text2);font-size:14px;">Search for a user to connect 👆</div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 7: CHAT ==================== -->
+<div id="s-chat" class="screen">
+  <div class="chat-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div id="chat-peer-avatar" class="msg-avatar av-blue" style="width:34px;height:34px;font-size:14px"></div>
+    <div class="chat-header-info">
+      <div class="chat-header-name" id="chat-peer-name">Username</div>
+      <div class="chat-header-status"><span class="status-dot"></span> Online</div>
+    </div>
+    <div class="timer-indicator" id="timer-indicator" style="display:none">
+      ⏱ <span id="timer-label">5 HR</span>
+    </div>
+  </div>
+
+  <div class="messages-list" id="messages-list"></div>
+
+  <div class="chat-input-bar">
+    <div class="timer-popup" id="timer-popup">
+      <div class="timer-option" onclick="setTimer('5 DAYS',5*24*60*60)">5 DAYS</div>
+      <div class="timer-option" onclick="setTimer('1 DAY',24*60*60)">1 DAY</div>
+      <div class="timer-option" onclick="setTimer('5 HR',5*60*60)">5 HR</div>
+    </div>
+    <div class="chat-input-row">
+      <button class="save-dot" id="save-dot" onclick="toggleSaveChat()" title="Save Chat" style="width:10px;height:10px;margin-right:2px;flex-shrink:0;"></button>
+      <button class="chat-action-btn" id="voice-btn" onclick="toggleVoice()" title="Voice Note">🎙️</button>
+      <input type="file" id="imgInput" accept="image/*" onchange="sendImage(event)" />
+      <button class="chat-action-btn" onclick="document.getElementById('imgInput').click()" title="Send Image">🖼️</button>
+      <textarea class="chat-msg-input" id="msg-input" placeholder="Message..." rows="1" onkeydown="msgKeydown(event)" oninput="autoResize(this)"></textarea>
+      <button class="chat-action-btn" id="timer-toggle-btn" onclick="toggleTimerPopup()" title="Disappearing timer">⏱</button>
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0 0;">
+      <span class="save-dot-label" id="save-dot-label" style="font-size:10px;color:var(--text2);">Tap dot to save chat</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 8: ADMIN LOCK ==================== -->
+<div id="s-admin-lock" class="screen">
+  <div class="logo" style="font-size:28px;margin-bottom:4px">Admin Access</div>
+  <div class="logo-sub" style="margin-bottom:28px">Protected Zone 🛡️</div>
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Admin Password</label>
+      <div class="pw-wrap"><input type="password" id="adm-p1" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('adm-p1',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Confirm Password</label>
+      <div class="pw-wrap"><input type="password" id="adm-p2" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('adm-p2',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="err-msg" id="adm-err"></div>
+    <button class="btn btn-accent" onclick="checkAdmin()">ENTER →</button>
+  </div>
+  <div style="margin-top:16px"><span class="back-btn" onclick="goHome()">←</span></div>
+</div>
+
+<!-- ==================== SCREEN 9: ADMIN PANEL ==================== -->
+<div id="s-admin" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="page-title">Admin Panel</div>
+    <div style="font-size:11px;color:var(--admin-gold);font-family:var(--font-head);font-weight:700;letter-spacing:1px;">⭐ ADMIN</div>
+  </div>
+
+  <div class="admin-content">
+    <!-- Active Users -->
+    <div class="admin-section">
+      <div class="admin-section-title">Active Users</div>
+      <div id="admin-user-list">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- Change Security Password -->
+    <div class="admin-section">
+      <div class="admin-section-title">Change Security Password</div>
+      <div class="admin-pw-form">
+        <div class="input-group"><div class="pw-wrap"><input type="password" id="new-sec-p1" placeholder="New Password 1" /><button class="pw-eye" onclick="togglePw('new-sec-p1',this)" tabindex="-1">👁</button></div></div>
+        <div class="input-group"><div class="pw-wrap"><input type="password" id="new-sec-p2" placeholder="New Password 2" /><button class="pw-eye" onclick="togglePw('new-sec-p2',this)" tabindex="-1">👁</button></div></div>
+        <div class="input-group"><div class="pw-wrap"><input type="password" id="new-sec-p3" placeholder="New Password 3" /><button class="pw-eye" onclick="togglePw('new-sec-p3',this)" tabindex="-1">👁</button></div></div>
+        <button class="btn btn-green" onclick="changeSecurityPw()">SAVE</button>
+      </div>
+    </div>
+
+    <!-- Change Admin Password -->
+    <div class="admin-section">
+      <div class="admin-section-title">Change Admin Password</div>
+      <div class="admin-pw-form">
+        <div class="input-group"><div class="pw-wrap"><input type="password" id="new-adm-pw" placeholder="New Admin Password" /><button class="pw-eye" onclick="togglePw('new-adm-pw',this)" tabindex="-1">👁</button></div></div>
+        <button class="btn btn-green" onclick="changeAdminPw()">SAVE</button>
+      </div>
+    </div>
+
+    <!-- Change Friends Password -->
+    <div class="admin-section">
+      <div class="admin-section-title">Change Friend Password</div>
+      <div class="admin-pw-form">
+        <div class="input-group"><div class="pw-wrap"><input type="password" id="new-friend-pw" placeholder="New Friend Password" /><button class="pw-eye" onclick="togglePw('new-friend-pw',this)" tabindex="-1">👁</button></div></div>
+        <button class="btn btn-green" onclick="changeFriendPw()">SAVE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav" style="justify-content:center">
+    <span class="zam-pill">ZAM CHAT</span>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 10: PROFILE ==================== -->
+<div id="s-profile" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="page-title">Profile</div>
+  </div>
+
+  <div class="profile-body">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar" id="profile-avatar-display" onclick="goEditProfile()">
+        <span id="profile-avatar-letter">Z</span>
+      </div>
+      <div class="profile-avatar-edit-hint">Tap to edit profile ✏️</div>
+    </div>
+
+    <div class="profile-info-card">
+      <div class="profile-info-row">
+        <span class="pir-label">Username</span>
+        <span class="pir-val" id="profile-username-display">—</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="pir-label">Friends</span>
+        <span class="friends-count-badge" id="profile-friends-count" onclick="goFriendsLock()">0</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="pir-label">Gender</span>
+        <span class="pir-val" id="profile-gender-display">—</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="pir-label">Age</span>
+        <span class="pir-val" id="profile-age-display">—</span>
+      </div>
+    </div>
+
+    <div class="bio-box" id="profile-bio-display">No bio yet.</div>
+  </div>
+
+  <div class="bottom-nav" style="position:relative;justify-content:center;">
+    <span class="zam-pill active-nav">ZAM CHAT</span>
+    <div class="icon-btn" onclick="doLogout()" title="Logout" style="position:absolute;right:14px;font-size:18px;">🚪</div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 11: EDIT PROFILE ==================== -->
+<div id="s-edit-profile" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="showScreen('s-profile');refreshProfile()">←</div>
+    <div class="page-title">Edit Profile</div>
+  </div>
+
+  <div class="edit-profile-body">
+    <div class="profile-avatar-wrap" style="margin-bottom:16px">
+      <div class="profile-avatar" onclick="document.getElementById('avatar-img-input').click()">
+        <span id="edit-avatar-letter">Z</span>
+        <img id="edit-avatar-img" src="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%" />
+      </div>
+      <input type="file" id="avatar-img-input" accept="image/*" style="display:none" onchange="handleAvatarChange(event)" />
+      <div class="profile-avatar-edit-hint">Tap to change photo</div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Username</label>
+      <input type="text" id="edit-username" placeholder="new_username" />
+    </div>
+    <div class="input-group">
+      <label class="input-label">New Password</label>
+      <div class="pw-wrap"><input type="password" id="edit-password" placeholder="leave blank to keep" /><button class="pw-eye" onclick="togglePw('edit-password',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Email</label>
+      <input type="email" id="edit-email" placeholder="you@email.com" />
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="input-group" style="flex:1">
+        <label class="input-label">Gender</label>
+        <input type="text" id="edit-gender" placeholder="Male / Female" />
+      </div>
+      <div class="input-group" style="flex:1">
+        <label class="input-label">Age (18+)</label>
+        <input type="number" id="edit-age" placeholder="18" min="18" />
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Bio</label>
+      <textarea id="edit-bio" placeholder="Tell something about yourself..." style="height:80px;resize:none;border-radius:12px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;width:100%;"></textarea>
+    </div>
+
+    <button class="btn btn-accent" onclick="saveProfile()">SAVE</button>
+  </div>
+
+  <div class="bottom-nav" style="justify-content:center">
+    <span class="zam-pill">ZAM CHAT</span>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 12: FRIENDS LOCK ==================== -->
+<div id="s-friends-lock" class="screen">
+  <div class="logo" style="font-size:26px;margin-bottom:4px">Friends</div>
+  <div class="logo-sub" style="margin-bottom:28px">Password Protected 🔐</div>
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Friend Password</label>
+      <div class="pw-wrap"><input type="password" id="fl-p1" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('fl-p1',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Confirm Password</label>
+      <div class="pw-wrap"><input type="password" id="fl-p2" placeholder="••••••••" /><button class="pw-eye" onclick="togglePw('fl-p2',this)" tabindex="-1">👁</button></div>
+    </div>
+    <div class="err-msg" id="fl-err"></div>
+    <button class="btn btn-accent" onclick="checkFriendPw()">ENTER →</button>
+  </div>
+  <div style="margin-top:16px"><span class="back-btn" onclick="showScreen('s-profile');refreshProfile()">←</span></div>
+</div>
+
+<!-- ==================== SCREEN 13: FRIENDS LIST ==================== -->
+<div id="s-friends" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="showScreen('s-profile');refreshProfile()">←</div>
+    <div class="page-title">Friends</div>
+    <div id="friends-count-badge" style="font-size:12px;color:var(--text2);margin-left:auto"></div>
+  </div>
+  <div class="friends-list" id="friends-list"></div>
+  <div class="bottom-nav" style="justify-content:center">
+    <span class="zam-pill">ZAM CHAT</span>
+  </div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== OVERLAY: CONFIRM DELETE USER ==================== -->
+<div class="overlay" id="overlay-del-user">
+  <div class="overlay-card">
+    <div class="overlay-title">Delete Account? ⚠️</div>
+    <div class="overlay-sub">This will permanently delete this user from ZAM CHAT. This cannot be undone.</div>
+    <button class="btn btn-danger" onclick="confirmDeleteUser()" style="margin-bottom:10px">Delete Account</button>
+    <button class="btn btn-outline" onclick="closeOverlay('overlay-del-user')">Cancel</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
